@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "787423084295",
+    "project_id": "bytebot-38abd",
+    "storage_bucket": "bytebot-38abd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:787423084295:android:a30047e1a4d7feecbf0fa2",
+        "android_client_info": {
+          "package_name": "com.bytebot.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "787423084295-eqh8mb1mp2g948rc67jc4ncp5fo8gm30.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bytebot.flutter_app",
+            "certificate_hash": "c6e6b5286a3a16752d158ae0fa25451fa87c8120"
+          }
+        },
+        {
+          "client_id": "787423084295-n28f9u51ierj2o9ptnp8fbmt8a497ng8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD72bKWDN176Qge6FGS73CuDhpzZ5RvNPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "787423084295-n28f9u51ierj2o9ptnp8fbmt8a497ng8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
