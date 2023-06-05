@@ -1,19 +1,27 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'package:bytebot/login.dart';
-import 'package:bytebot/register.dart';
+import 'package:bytebot/screens/sign_in_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'home.dart';
-
 void main() async {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    initialRoute: "login",
-    routes: {
-      "login": (context) => MyLogin(),
-      "register": (context) => MyRegister(),
-      "home": (context) => Home(),
-    },
-  ));
+  //Flutter needs to call native code before calling runApp, makes sure that you have an instance of the WidgetsBinding, which is required to use platform channels to call the native code. Basically this ensures that firebase is initialised before we run our application
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "ByteBot",
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: SignInScreen(),
+    );
+  }
 }
