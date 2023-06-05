@@ -55,26 +55,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 reusableTextField("Enter password", Icons.lock, true,
                     _passwordTextController),
                 const SizedBox(height: 30),
-                generalButton(context, () {
-                  FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignInScreen(),
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("User Created successfully"),
-                    ));
-                  }).onError((error, stackTrace) {
+                generalButton(context, () async {
+                  try {
+                    await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text)
+                        .then((value) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignInScreen(),
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("User Created successfully"),
+                      ));
+                    });
+                  } on FirebaseAuthException catch (error) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("$error"),
+                      content: Text(error.message.toString()),
                     ));
-                  });
+                  }
                 }, "SIGN UP"),
                 const SizedBox(
                   height: 20,

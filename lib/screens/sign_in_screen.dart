@@ -61,25 +61,27 @@ class _SignInScreenState extends State<SignInScreen> {
                     _passwordTextController),
                 const SizedBox(height: 5),
                 forgetPassword(context),
-                generalButton(context, () {
-                  FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: _emailTextController.text,
-                          password: _passwordTextController.text)
-                      .then((value) {
+                generalButton(context, () async {
+                  try {
+                    await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: _emailTextController.text,
+                            password: _passwordTextController.text)
+                        .then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("User Logged In successfully"),
+                      ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ));
+                    });
+                  } on FirebaseAuthException catch (error) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("User Logged In successfully"),
+                      content: Text(error.message.toString()),
                     ));
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ));
-                  }).onError((error, stackTrace) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("$error"),
-                    ));
-                  });
+                  }
                 }, "LOG IN"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

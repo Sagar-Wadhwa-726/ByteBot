@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, avoid_print
+// ignore_for_file: prefer_final_fields, avoid_print, unused_catch_clause, empty_catches
 
 import 'package:bytebot/screens/sign_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,26 +48,28 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                generalButton(context, () {
-                  FirebaseAuth.instance
-                      .sendPasswordResetEmail(email: _emailTextController.text)
-                      .then((value) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignInScreen(),
-                      ),
-                      (route) => false,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Password reset mail sent successfully"),
-                    ));
-                  }).onError((error, stackTrace) {
+                generalButton(context, () async {
+                  try {
+                    await FirebaseAuth.instance
+                        .sendPasswordResetEmail(
+                            email: _emailTextController.text)
+                        .then((value) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignInScreen(),
+                          ),
+                          (route) => false);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Password reset mail sent successfully"),
+                      ));
+                    });
+                  } on FirebaseAuthException catch (error) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(error.toString()),
+                      content: Text(error.message.toString()),
                     ));
-                  });
-                }, "RESET PASSWORD")
+                  }
+                }, "RESET PASSWORD"),
               ],
             ),
           ),
