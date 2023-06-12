@@ -14,6 +14,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  var isCreated = false;
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
   TextEditingController _userNameTextController = TextEditingController();
@@ -42,10 +43,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
+            padding: EdgeInsets.fromLTRB(
+                20, MediaQuery.of(context).size.height * 0.12, 20, 0),
             child: Column(
               children: <Widget>[
-                // const SizedBox(height: 20),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: SizedBox.fromSize(
+                    size: const Size.fromRadius(90),
+                    child: logoWidget("assets/images/logo1.jpg"),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Create a new account",
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
                 reusableTextField("Enter username", Icons.person_outline, false,
                     _userNameTextController),
                 const SizedBox(height: 30),
@@ -55,31 +69,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 reusableTextField("Enter password", Icons.lock, true,
                     _passwordTextController),
                 const SizedBox(height: 30),
-                generalButton(context, () async {
-                  try {
-                    await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text)
-                        .then((value) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignInScreen(),
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("User Created successfully"),
-                      ));
-                    });
-                  } on FirebaseAuthException catch (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(error.message.toString()),
-                    ));
-                  }
-                }, "SIGN UP"),
+                isCreated == false
+                    ? generalButton(context, () async {
+                        try {
+                          setState(() {
+                            isCreated = true;
+                          });
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
+                              .then((value) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignInScreen()),
+                                (route) => false);
+                            getSnackbar("\nUser Created successfully", "");
+                          });
+                        } on FirebaseAuthException catch (error) {
+                          setState(() {
+                            isCreated = false;
+                          });
+                          getSnackbar("\n${error.message.toString()}", "");
+                        }
+                      }, "SIGN UP")
+                    : const CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
                 const SizedBox(
                   height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account?",
+                        style: TextStyle(color: Colors.white70, fontSize: 17)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignInScreen(),
+                            ));
+                      },
+                      child: const Text(
+                        " Sign In",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

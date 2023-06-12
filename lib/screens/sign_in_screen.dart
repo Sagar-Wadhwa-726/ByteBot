@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_final_fields, must_be_immutable, prefer_const_literals_to_create_immutables, prefer_const_constructors, nullable_type_in_catch_clause
-
 import 'package:bytebot/screens/home_screen.dart';
 import 'package:bytebot/screens/sign_up_screen.dart';
 import 'package:bytebot/utils/colors_utils.dart';
@@ -15,9 +14,10 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  var isVerified = false;
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,15 +43,20 @@ class _SignInScreenState extends State<SignInScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                20, MediaQuery.of(context).size.height * 0.2, 20, 0),
+                20, MediaQuery.of(context).size.height * 0.12, 20, 0),
             child: Column(
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: SizedBox.fromSize(
-                    size: Size.fromRadius(100),
+                    size: Size.fromRadius(90),
                     child: logoWidget("assets/images/logo1.jpg"),
                   ),
+                ),
+                const SizedBox(height: 30),
+                Text(
+                  "Welcome to ByteBot",
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 30),
                 reusableTextField("Enter Email-ID", Icons.person_outline, false,
@@ -59,35 +64,44 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 30),
                 reusableTextField("Enter Password", Icons.lock, true,
                     _passwordTextController),
-                const SizedBox(height: 5),
+                const SizedBox(height: 15),
                 forgetPassword(context),
-                generalButton(context, () async {
-                  try {
-                    await FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text)
-                        .then((value) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("User Logged In successfully"),
-                      ));
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ));
-                    });
-                  } on FirebaseAuthException catch (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(error.message.toString()),
-                    ));
-                  }
-                }, "LOG IN"),
+                const SizedBox(height: 20),
+                isVerified == false
+                    ? generalButton(context, () async {
+                        try {
+                          setState(() {
+                            isVerified = true;
+                          });
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text)
+                              .then((value) {
+                            getSnackbar(
+                                "User Logged In Successfully", "Welcome User");
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()),
+                                (route) => false);
+                          });
+                        } on FirebaseAuthException catch (error) {
+                          setState(() {
+                            isVerified = false;
+                          });
+                          getSnackbar("\n${error.message}", "");
+                        }
+                      }, "LOG IN")
+                    : CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Don't have an account? ",
-                        style: TextStyle(color: Colors.white70)),
+                        style: TextStyle(color: Colors.white70, fontSize: 17)),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -99,7 +113,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: const Text(
                         "Sign Up",
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17),
                       ),
                     ),
                   ],

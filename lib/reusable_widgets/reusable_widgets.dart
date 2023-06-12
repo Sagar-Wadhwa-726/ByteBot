@@ -1,7 +1,7 @@
 // ignore_for_file: use_function_type_syntax_for_parameters, non_constant_identifier_names, avoid_types_as_parameter_names, sized_box_for_whitespace
-
 import 'package:bytebot/screens/reset_password.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // reusable widget for the logo image
 Image logoWidget(String imageName) {
@@ -25,6 +25,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
     enableSuggestions: !isPasswordType,
     autocorrect: !isPasswordType,
     cursorColor: Colors.white,
+    textInputAction: TextInputAction.next,
     style: TextStyle(color: Colors.white.withOpacity(0.9)),
     decoration: InputDecoration(
       prefixIcon: Icon(icon, color: Colors.white70),
@@ -42,8 +43,7 @@ TextField reusableTextField(String text, IconData icon, bool isPasswordType,
 }
 
 //reusable widget for the signin/signup button
-Container generalButton(
-    BuildContext context, Function onTap, String title) {
+Container generalButton(BuildContext context, Function onTap, String title) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: 50,
@@ -72,12 +72,11 @@ Container generalButton(
   );
 }
 
-
 //reusable widget for forgot password
 Widget forgetPassword(BuildContext context) {
   return Container(
     width: MediaQuery.of(context).size.width,
-    height: 35,
+    height: 45,
     alignment: Alignment.bottomRight,
     child: TextButton(
       onPressed: () {
@@ -89,8 +88,45 @@ Widget forgetPassword(BuildContext context) {
       },
       child: const Text(
         "Forgot Password?",
-        style: TextStyle(color: Colors.white70),
+        style: TextStyle(color: Colors.white70, fontSize: 17),
         textAlign: TextAlign.center,
+      ),
+    ),
+  );
+}
+
+//reusable widget for the GetX snackbar
+SnackbarController getSnackbar(String heading, String subtitle) {
+  return Get.snackbar(
+    heading,
+    subtitle,
+    icon: const Icon(Icons.warning_amber_rounded, color: Colors.black),
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: const Color.fromARGB(255, 197, 207, 224),
+    borderRadius: 15,
+    margin: const EdgeInsets.all(25),
+    colorText: Colors.black,
+    duration: const Duration(seconds: 3),
+    isDismissible: true,
+    dismissDirection: DismissDirection.vertical,
+    forwardAnimationCurve: Curves.easeOutBack,
+  );
+}
+
+// reusable widget for list tiles in the drawer section
+ListTile drawerTiles(BuildContext context, IconData prefixicon, String title,
+    Function onSeleciton) {
+  return ListTile(
+    onTap: () => onSeleciton(),
+    leading: Icon(
+      prefixicon,
+      color: Colors.white,
+    ),
+    title: Text(
+      title,
+      textScaleFactor: 1.2,
+      style: const TextStyle(
+        color: Colors.white,
       ),
     ),
   );
