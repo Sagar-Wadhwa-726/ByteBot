@@ -12,6 +12,7 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import '../reusable_widgets/reusable_widgets.dart';
 import 'about.dart';
+import 'image_desc.dart';
 import 'contact.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -127,6 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ContactPage()));
               }),
+              drawerTiles(context, Icons.image, "Image Descriptor", () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AltTextScreen()));
+              }),
+              SizedBox(height: 10),
               SizedBox(height: 40),
               Container(
                 padding: EdgeInsets.all(0),

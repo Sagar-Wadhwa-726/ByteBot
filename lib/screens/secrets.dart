@@ -1,1 +1,1 @@
-const openAIAPIKey = "<YOUR-OPENAI-APIKEY-HERE>";
+const openAIAPIKey = "<YOUR-OPENAI-API-KEY-HERE>";
